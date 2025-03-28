@@ -6,4 +6,3 @@ from scr.col_geotopic import temp
 
 
 print("temp:", temp)
-

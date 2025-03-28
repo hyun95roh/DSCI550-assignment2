@@ -1,0 +1,4 @@
+[ZoneTransfer]
+ZoneId=3
+ReferrerUrl=https://www.apache.org/
+HostUrl=https://dlcdn.apache.org/tika/3.1.0/tika-parser-nlp-package-3.1.0.jar
