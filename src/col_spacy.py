@@ -25,12 +25,27 @@ except OSError:
 # Ensure that the tsv file is available.
 df = pd.read_csv("haunted_places.tsv", sep="\t")
 
-def extract_entities(text):
-    doc = nlp(str(text)) # Ensure text is in string format
-    return [(ent.label_, ent.text) for ent in doc.ents] 
+# Function to extract NEs from document and creat dictionary of k:v -> label:text
+def extract_entity_dict(text):
+    doc = nlp(str(text))
+    entity_dict = {}
+    for ent in doc.ents:
+        entity_dict.setdefault(ent.label_, []).append(ent.text)
+    return entity_dict
 
-# Apply NER to the 'description' column. This takes about 10 minutes.
-df['entities'] = df['description'].apply(extract_entities)
+# Apply function to description column. This code takes approx. 10 minutes to run.
+df['entity_dict'] = df['description'].apply(extract_entity_dict)
+
+# Get all unique entity labels from the dataset
+all_labels = set()
+df['entity_dict'].apply(lambda d: all_labels.update(d.keys()))
+
+# Create separate columns for each label
+for label in all_labels:
+    df[label] = df['entity_dict'].apply(lambda d: d.get(label, []))
+
+# Drop the intermediate dictionary column if not needed
+df.drop(columns=['entity_dict'], inplace=True)
 
 # Save to a new file.
 ner_results = "ner_results.tsv"
