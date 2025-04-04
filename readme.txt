@@ -43,5 +43,166 @@ tika_cmd_base = [
 ]
 ```
 
+# Image Generation and Processing Pipeline
+
+This document explains how to set up and use an AI pipeline involving image generation (Colab), captioning, and object detection (Docker).
+
+## Setup Instructions
+
+### Environment for Image Generation (Colab)
+
+**Mount Google Drive**:
+
+```python
+from google.colab import drive
+drive.mount('/content/drive')
+```
+
+**Set Up Caching**:
+
+This stores model weights and dependencies on Drive, speeding up future runs.
+
+```python
+import os
+os.environ["HF_HOME"] = "/content/drive/MyDrive/huggingface_cache"
+```
+
+---
+
+## Docker Containers
+
+### a. Image Captioning Container
+
+**Build Docker Image**:
+
+```bash
+docker build -f Im2txtRestDockerfile -t uscdatascience/im2txt-rest-tika .
+```
+
+**Run Container**:
+
+Replace `/path/to/your/images` with your image directory.
+
+```bash
+docker run --platform linux/amd64 -it -p 8765:8764 -v /path/to/your/images:/data uscdatascience/im2txt-rest-tika
+```
+
+### b. Object Detection Container
+
+**Build Docker Image**:
+
+```bash
+docker build -f InceptionRestDockerfile -t uscdatascience/inception-rest-tika .
+```
+
+**Run Container**:
+
+Replace `/path/to/your/images` with your image directory.
+
+```bash
+docker run --platform linux/amd64 -it -p 8766:8764 -v /path/to/your/images:/data uscdatascience/inception-rest-tika
+```
+
+---
+
+## Serving Images via HTTP
+
+Navigate to your image directory and run:
+
+```bash
+cd "/Users/yourname/Documents/Images"
+python -m http.server 8000
+```
+
+Images will be accessible via:
+
+```
+http://localhost:8000/image_0.png
+```
+
+---
+
+## Usage
+
+### Running the Jupyter Notebook
+
+1. Open `notebook.ipynb`.
+2. Update paths (TSV file, images directory, etc.).
+3. Run cells sequentially:
+   - Reads TSV file.
+   - Calls captioning and object detection APIs.
+   - Adds results to DataFrame.
+   - Saves DataFrame as a TSV file.
+
+---
+
+## API Endpoints
+
+### Captioning Endpoint
+
+```
+http://localhost:8765/inception/v3/caption/image?url=<image_url>&beam_size=3&max_caption_length=30
+```
+
+### Object Detection Endpoint
+
+```
+http://localhost:8766/inception/v4/classify/image?url=<image_url>&topn=2&min_confidence=0.03
+```
+
+Replace `<image_url>` with your image URL, for example:
+
+```
+http://host.docker.internal:8000/image_0.png
+```
+
+---
+
+## Pipeline Overview
+
+### Image Generation
+- Uses Stable Diffusion on Colab Pro.
+- Checkpointing allows resuming from the last processed image.
+
+### Image Captioning
+- Docker container runs a captioning model.
+- Selects captions based on highest confidence.
+
+### Object Detection
+- Docker container runs an Inception-based detection model.
+- Extracts detected object names.
+
+### Integration
+- Local HTTP server makes images accessible.
+- API responses processed in Jupyter Notebook.
+
+---
+
+## Real-World Relevance
+- **Scalability:** Dependency caching and checkpointing for large-scale tasks.
+- **Deployment:** Docker and API integrations reflecting modern industry practices.
+- **Efficiency:** Optimized workflows for cost and downtime reduction.
+- **Evaluation:** Comparing AI models for practical insights (media, advertising, surveillance).
+
+---
+
+## Troubleshooting
+
+### Service Connection Issues
+- Verify container status: `docker ps`
+- Ensure correct port mapping and running HTTP server.
+
+### File Access
+- Confirm Docker volume mounting.
+
+### API Endpoint Verification
+- Inspect container logs to verify correct API endpoints.
+
+### Authentication and Permissions
+- Check Google Drive mounting (for Colab).
+- Verify file permissions.
+
+
+
 
 
