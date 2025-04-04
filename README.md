@@ -44,7 +44,7 @@ To install spaCy, follow the instructions at this [link](https://spacy.io/usage)
         "org.apache.tika.cli.TikaCLI", "-m"
     ]
     ```
-<details/>
+</details>
 
 
 # Image Generation and Processing Pipeline
@@ -206,5 +206,5 @@ To install spaCy, follow the instructions at this [link](https://spacy.io/usage)
     - Check Google Drive mounting (for Colab).
     - Verify file permissions.
 
-<details/>
+</details>
 
