@@ -44,7 +44,7 @@ tika_cmd_base = [
     "org.apache.tika.cli.TikaCLI", "-m"
 ]
 ```
-<datils/>
+<details/>
 
 
 # Image Generation and Processing Pipeline
