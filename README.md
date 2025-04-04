@@ -44,11 +44,11 @@ tika_cmd_base = [
     "org.apache.tika.cli.TikaCLI", "-m"
 ]
 ```
-
 <datils/>
 
-# Image Generation and Processing Pipeline
 
+# Image Generation and Processing Pipeline
+<details>
 This document explains how to set up and use an AI pipeline involving image generation (Colab), captioning, and object detection (Docker).
 
 ## Setup Instructions
@@ -206,4 +206,5 @@ http://host.docker.internal:8000/image_0.png
 - Check Google Drive mounting (for Colab).
 - Verify file permissions.
 
+<details/>
 
