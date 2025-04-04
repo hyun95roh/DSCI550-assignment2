@@ -89,4 +89,5 @@ wasabi==0.9.1
 wcwidth==0.2.13
 weasel==0.3.4
 wheel==0.45.1
+wordcloud==1.9.4
 zipp==3.21.0
